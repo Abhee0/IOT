@@ -1,0 +1,154 @@
+//IOT WITH AI PRACTICAL NO 1  
+
+void setup() {  
+  pinMode(LED_BUILTIN, OUTPUT); 
+ } void loop() {    digitalWrite(LED_BUILTIN, HIGH);     delay(1000);                         digitalWrite(LED_BUILTIN, LOW);      delay(1000);                        
+}  
+
+//IOT WITH AI PRACTICAL NO 2  
+
+int mychar = 0; 
+void setup()
+{  Serial.begin(9600);  
+ pinMode(7,OUTPUT);
+pinMode(8,OUTPUT);
+pinMode(9,OUTPUT); }
+void loop() 
+{    if (Serial.available() > 0) {  mychar = Serial.read();  Serial.print("I received: "); 
+ Serial.println(mychar); 
+  } 
+if(mychar == 114 ) //Red 
+{ digitalWrite(7,HIGH); digitalWrite(8,LOW); digitalWrite(9,LOW);  } 
+if(mychar == 103 ) // Green 
+{ digitalWrite(7,LOW); digitalWrite(8,HIGH); digitalWrite(9,LOW);  } 
+if(mychar == 98 ) // Blue 
+{ digitalWrite(7,LOW); digitalWrite(8,LOW); digitalWrite(9,HIGH);  
+} 
+} 
+
+//IOT WITH AI PRACTICAL NO 3   
+
+int out; void setup()  
+{ 
+ Serial.begin(9600);  
+ } void loop() 
+{  
+ if (Serial.available() > 0)  
+ {   
+ int num=Serial.readString().toInt(); 
+  
+Serial.print("I received: "); Serial.println(num);  out = num*num; Serial.print("Sq of no.: "); 
+Serial.println(out);  
+ } 
+} 
+
+// IOT practical 4
+
+#include <DHT11.h> 
+ 
+DHT11 dht11(2); 
+ void setup() { 
+ 
+    Serial.begin(9600); 
+ 
+}  
+void loop() { 
+     int temperature = dht11.readTemperature(); 
+    if (temperature != DHT11::ERROR_CHECKSUM && temperature != 
+DHT11::ERROR_TIMEOUT) { 
+        Serial.print("Temperature: "); 
+        Serial.print(temperature); 
+        Serial.println(" °C"); 
+    } else { 
+        Serial.println(DHT11::getErrorString(temperature)); 
+    } 
+} 
+
+
+//IOT WITH AI PRACTICAL NO 5   
+
+#include <DHT.h> 
+ 
+#define DHTPIN A0         // Pin where the DHT11 is connected 
+#define DHTTYPE DHT11     // Define the type of sensor 
+ 
+DHT dht(DHTPIN, DHTTYPE); // Create a DHT object  
+// Variables to store temperature data float temperatureF;  // Current temperature in Fahrenheit float maxTempF = -1000.0;  // Maximum temperature float minTempF = 1000.0;   // Minimum temperature 
+ const int resetPin = 2; // Digital pin 2 to reset min/max temperatures unsigned long lastButtonPress = 0; // To manage debounce 
+ 
+void setup() {   Serial.begin(9600); 
+  pinMode(resetPin, INPUT_PULLUP); 
+   
+  dht.begin(); // Initialize the DHT sensor 
+  Serial.println("DHT11 Temperature Sensor Program 
+Initialized"); 
+}  void loop() {   readTemperature();   checkReset();   delay(2000); // Read temperature every 2 seconds }  void readTemperature() { 
+  temperatureF = dht.readTemperature(true); // true for 
+Fahrenheit  
+  if (isnan(temperatureF)) { 
+    Serial.println("Failed to read from DHT sensor!");     return; 
+  }    updateMinMax();   displayTemperatures(); 
+}  void updateMinMax() {   if (temperatureF > maxTempF) {     maxTempF = temperatureF; 
+  }   if (temperatureF < minTempF) {     minTempF = temperatureF; 
+  } 
+}  
+void displayTemperatures() { 
+  Serial.print("Current Temperature (F): "); 
+  Serial.println(temperatureF); 
+  Serial.print("Max Temperature (F): ");   Serial.println(maxTempF); 
+  Serial.print("Min Temperature (F): "); 
+  Serial.println(minTempF); 
+}  void checkReset() {   if (digitalRead(resetPin) == LOW) {     unsigned long currentMillis = millis();     if (currentMillis - lastButtonPress > 500) { // 500ms debounce 
+      maxTempF = -1000.0;       minTempF = 1000.0; 
+      Serial.println("Min/Max temperatures reset.");       lastButtonPress = currentMillis; 
+    } 
+  } 
+}  
+
+
+
+//IOT WITH AI LAB 6 
+
+
+const int redPotPin = A0;   // Potentiometer for red const int greenPotPin = A1; // Potentiometer for green const int bluePotPin = A2;  // Potentiometer for blue 
+ const int redLEDPin = 9;    // Red LED pin const int greenLEDPin = 10;  // Green LED pin const int blueLEDPin = 11;   // Blue LED pin 
+ 
+void setup() { 
+     pinMode(redLEDPin, OUTPUT);   pinMode(greenLEDPin, OUTPUT);   pinMode(blueLEDPin, OUTPUT); 
+}  void loop() { 
+  // Read the values from the potentiometers   int redValue = analogRead(redPotPin);   int greenValue = analogRead(greenPotPin);   intmap blueValue = analogRead(bluePotPin);   // Map the potentiometer values (0-1023) to PWM values (0-
+255)   redValue = map(redValue, 0, 1023, 0, 255);   greenValue = map(greenValue, 0, 1023, 0, 255);   blueValue = map(blueValue, 0, 1023, 0, 255); 
+   
+  // Set the LED colors   analogWrite(redLEDPin, redValue);   analogWrite(greenLEDPin, greenValue);   analogWrite(blueLEDPin, blueValue); 
+   
+  // Small delay for stability   delay(10); 
+} 
+
+
+
+//IOT WITH AI PRACTICAL NO 7: 
+ 
+// Pin definitions for the LEDs const int redLED = 9; const int yellowLED = 8; const int greenLED = 7; 
+ 
+void setup() { 
+  // Set the LED pins as OUTPUT   pinMode(redLED, OUTPUT);   pinMode(yellowLED, OUTPUT);   pinMode(greenLED, OUTPUT); 
+}  void loop () { 
+  // Green light ON for 5 seconds (simulating go signal)   digitalWrite(greenLED, HIGH);   // Turn on green light   digitalWrite(yellowLED, LOW);   // Ensure yellow is off   digitalWrite(redLED, LOW);      // Ensure red is off   delay(5000);                    // Wait for 5 seconds   // Yellow light ON for 2 seconds (simulating caution signal)   digitalWrite(greenLED, LOW);    // Turn off green light   digitalWrite(yellowLED, HIGH);  // Turn on yellow light   delay(5000);                    // Wait for 2 seconds 
+   
+  // Red light ON for 5 seconds (simulating stop signal)   digitalWrite(yellowLED, LOW);   // Turn off yellow light   digitalWrite(redLED, HIGH);     // Turn on red light   delay(5000);                    // Wait for 5 seconds 
+   
+  // Repeat the cycle 
+} 
+
+
+ 
+
+
+
+
+
+
+
+
+
+
